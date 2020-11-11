@@ -1,15 +1,16 @@
 import bioread
 import numpy as np
 import sys
+import argparse
 
 def acq_to_text(data_in_from, filename, data_out_to = None):
     """
     Reads in an .acq file and converts the data to a .txt file of the same format as
     Biopac's own conversion to .txt. The output file will have the same name as the input file,
     but with .txt extension instead of .acq
-    :param data_in_from : full path to file where the data can be found
-    :param filename : name of the .acq file to convert.
-    :param data_out_to : path to write the output to. If not set, defaults to data_in_from
+    :param data_in_from: full path to file where the data can be found
+    :param filename: name of the .acq file to convert.
+    :param data_out_to: path to write the output to. If not set, defaults to data_in_from
     """
 
     if data_out_to is None:
@@ -51,15 +52,17 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
 
 
 def main():
-    data_in_from = sys.argv[1]
-    filename = sys.argv[2]
-    if len(sys.argv) > 3:
-        data_out_to = sys.argv[3]
-    else:
-        data_out_to = None
-    acq_to_text(data_in_from, filename, data_out_to)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("data_in_from", help="path to the data directory")
+    parser.add_argument("filename", help="file name for the file to be converted")
+    parser.add_argument("-out", "--outdatalocation", dest="data_out_to", help="where to save the converted file")
+    if len(sys.argv) < 3:
+        print("please make sure you have provided at least data location and filename as shown below")
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+    args = parser.parse_args()
+    acq_to_text(args.data_in_from, args.filename, args.data_out_to)
     return('Done')
-
 
 if __name__ == '__main__':
     main()
