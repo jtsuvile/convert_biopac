@@ -2,6 +2,7 @@ import bioread
 import numpy as np
 import sys
 import argparse
+import os
 
 def acq_to_text(data_in_from, filename, data_out_to = None):
     """
@@ -17,7 +18,17 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
         data_out_to = data_in_from
 
     # read in the data with the help of the bioread package
-    data = bioread.read_file(data_in_from + filename +'.acq')
+    if not filename.endswith('.acq'):
+        filename = filename + '.acq'
+
+    if not data_in_from.endswith('/'):
+        data_in_from = data_in_from + '/'
+
+    try:
+        data = bioread.read_file(data_in_from + filename)
+    except:
+        print('Problems reading data from file ' + data_in_from + filename)
+        raise
 
     # compile output to the same format as Biopac's own .txt data output
     output = ''
@@ -42,7 +53,7 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
     output += datapoints + '\n'
 
     # write out the results
-    save_to = data_out_to + filename + '.txt'
+    save_to = data_out_to + '/' + os.path.splitext(filename)[0] + '.txt'
     with open(save_to,'w') as f:
         f.write(output)
     with open(save_to, 'ab') as f:
@@ -60,8 +71,14 @@ def main():
         print("please make sure you have provided at least data location and filename as shown below")
         parser.print_help(sys.stderr)
         sys.exit(1)
+
     args = parser.parse_args()
-    acq_to_text(args.data_in_from, args.filename, args.data_out_to)
+
+    # make sure filename does not contain file extension
+    filename = os.path.splitext(args.filename)[0]
+
+    acq_to_text(args.data_in_from, filename, args.data_out_to)
+
     return('Done')
 
 if __name__ == '__main__':
