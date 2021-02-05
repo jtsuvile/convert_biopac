@@ -1,0 +1,10 @@
+name: femg
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - h5py
+  - scipy
+  - matplotlib
+prefix: /Users/juusu53/miniconda3/envs/femg
+

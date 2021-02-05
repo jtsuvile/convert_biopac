@@ -13,7 +13,6 @@ filenames = ['E016_IAPS_pre_stress.acq',
 
 for file in filenames:
     print("Working on file " + file)
-    acq_to_text('/Users/juusu53/Documents/projects/femg/data/raw',file, '/Users/juusu53/Documents/projects/femg/data/preprocessed')
+    acq_to_text('/Users/juusu53/Documents/projects/femg/data/raw', file, '/Users/juusu53/Documents/projects/femg/data/preprocessed')
 
 print('done with conversion')
-

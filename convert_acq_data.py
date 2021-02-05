@@ -33,7 +33,7 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
     # compile output to the same format as Biopac's own .txt data output
     output = ''
     output += filename + '\n'
-    output += str(data.channels[0].samples_per_second) + ' samples per second\n'
+    output += str(data.channels[0].samples_per_second/1000) + ' msec/sample\n'
     output += str(len(data.channels)) + ' channels\n'
     for channel in data.channels:
         output += channel.name + '\n'
@@ -44,8 +44,8 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
     data_matrix = np.zeros((data.channels[0].point_count, len(data.channels)))
 
     for i, channel in enumerate(data.channels):
-        names += 'CH' + str(channel.order_num) + ', '
-        datapoints += str(channel.data_length) + ', '
+        names += 'CH' + str(channel.order_num) + ','
+        datapoints += str(channel.data_length) + ','
         data_matrix[:, i] = channel.data
 
     data_matrix.round(decimals=8)
@@ -57,7 +57,7 @@ def acq_to_text(data_in_from, filename, data_out_to = None):
     with open(save_to,'w') as f:
         f.write(output)
     with open(save_to, 'ab') as f:
-        np.savetxt(f, data_matrix, delimiter=",", fmt='%2.8g')
+        np.savetxt(f, data_matrix, delimiter=",", fmt='%.8g')
 
     return('Done')
 
